@@ -1,0 +1,6 @@
+{
+  "name": "دنیای علوم",
+  "description": "سیستم آموزش هوشمند و تعاملی علوم تجربی با آزمایشگاه ۳بعدی واقعیت افزوده و هوش مصنوعی معلمان",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
