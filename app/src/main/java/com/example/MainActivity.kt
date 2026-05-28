@@ -42,6 +42,8 @@ import com.example.ui.screens.VirtualLabScreen
 import com.example.viewmodel.AppTab
 import com.example.viewmodel.ScienceViewModel
 
+import com.example.viewmodel.AuthViewModel
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,40 +51,83 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyApplicationTheme {
                 val viewModel: ScienceViewModel = viewModel()
+                val authViewModel: AuthViewModel = viewModel()
                 val activeTab by viewModel.activeTab.collectAsState()
+
+                // Auth state
+                var isLoggedIn by remember { mutableStateOf(authViewModel.sessionManager.isLoggedIn()) }
+                var showAdminPanel by remember { mutableStateOf(false) }
 
                 // Force RTL Persian support
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         // Liquid Glass Glowing Animated Space Background
                         GlassyBackground {
-                            Scaffold(
-                                modifier = Modifier.fillMaxSize(),
-                                containerColor = Color.Transparent, // Let background shine
-                                bottomBar = {
-                                    LiquidFloatingNavBar(
-                                        activeTab = activeTab,
-                                        onTabSelected = { viewModel.selectTab(it) }
-                                    )
+                            if (!isLoggedIn) {
+                                com.example.ui.screens.AuthScreen(
+                                    viewModel = authViewModel,
+                                    onLoginSuccess = { role ->
+                                        isLoggedIn = true
+                                        viewModel.setCurrentUserRole(role)
+                                    }
+                                )
+                            } else if (showAdminPanel) {
+                                com.example.ui.screens.AdminScreen(
+                                    viewModel = authViewModel,
+                                    onBack = { showAdminPanel = false }
+                                )
+                                // Floating back button for Admin Screen
+                                Box(modifier = Modifier.fillMaxSize()) {
+                                    FloatingActionButton(
+                                        onClick = { showAdminPanel = false },
+                                        modifier = Modifier
+                                            .align(Alignment.BottomStart)
+                                            .padding(32.dp),
+                                        containerColor = NeonCyan
+                                    ) {
+                                        Icon(Icons.Default.ArrowForward, contentDescription = "Back")
+                                    }
                                 }
-                            ) { innerPadding ->
-                                // Screen Container transitioning with crossfade
-                                AnimatedContent(
-                                    targetState = activeTab,
-                                    transitionSpec = {
-                                        fadeIn(animationSpec = tween(300)) togetherWith
-                                                fadeOut(animationSpec = tween(300))
+                            } else {
+                                Scaffold(
+                                    modifier = Modifier.fillMaxSize(),
+                                    containerColor = Color.Transparent, // Let background shine
+                                    bottomBar = {
+                                        LiquidFloatingNavBar(
+                                            activeTab = activeTab,
+                                            onTabSelected = { viewModel.selectTab(it) }
+                                        )
                                     },
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .padding(innerPadding),
-                                    label = "tab_crossfade"
-                                ) { tab ->
-                                    when (tab) {
-                                        AppTab.HOME -> HomeScreen(viewModel = viewModel)
-                                        AppTab.VIRTUAL_LAB -> VirtualLabScreen(viewModel = viewModel)
-                                        AppTab.AI_TEACHER -> AiTeacherScreen(viewModel = viewModel)
-                                        AppTab.CHANNELS -> ChannelsScreen(viewModel = viewModel)
+                                    floatingActionButton = {
+                                        if (authViewModel.sessionManager.getCurrentRole() == "ADMIN") {
+                                            FloatingActionButton(
+                                                onClick = { showAdminPanel = true },
+                                                containerColor = com.example.ui.components.LiquidPink,
+                                                contentColor = Color.White
+                                            ) {
+                                                Icon(Icons.Default.AdminPanelSettings, contentDescription = "Admin Panel")
+                                            }
+                                        }
+                                    }
+                                ) { innerPadding ->
+                                    // Screen Container transitioning with crossfade
+                                    AnimatedContent(
+                                        targetState = activeTab,
+                                        transitionSpec = {
+                                            fadeIn(animationSpec = tween(300)) togetherWith
+                                                    fadeOut(animationSpec = tween(300))
+                                        },
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .padding(innerPadding),
+                                        label = "tab_crossfade"
+                                    ) { tab ->
+                                        when (tab) {
+                                            AppTab.HOME -> HomeScreen(viewModel = viewModel)
+                                            AppTab.VIRTUAL_LAB -> VirtualLabScreen(viewModel = viewModel)
+                                            AppTab.AI_TEACHER -> AiTeacherScreen(viewModel = viewModel)
+                                            AppTab.CHANNELS -> ChannelsScreen(viewModel = viewModel)
+                                        }
                                     }
                                 }
                             }

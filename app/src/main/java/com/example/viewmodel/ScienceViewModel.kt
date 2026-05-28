@@ -62,13 +62,37 @@ class ScienceViewModel(application: Application) : AndroidViewModel(application)
 
     private val db = ScienceDatabase.getDatabase(application)
     private val chatDao = db.chatDao()
+    
+    private val appDb = com.example.data.database.AppDatabase.getDatabase(application)
+    private val authRepo = com.example.data.AppRepository(appDb.userDao(), appDb.activityLogDao())
+    private val sessionManager = com.example.data.SessionManager(application)
 
     // Active Navigation
     private val _activeTab = MutableStateFlow(AppTab.HOME)
     val activeTab: StateFlow<AppTab> = _activeTab.asStateFlow()
 
+    private val _userRole = MutableStateFlow("STUDENT")
+    val userRole: StateFlow<String> = _userRole.asStateFlow()
+
+    fun setCurrentUserRole(role: String) {
+        _userRole.value = role
+    }
+
     fun selectTab(tab: AppTab) {
         _activeTab.value = tab
+        
+        viewModelScope.launch {
+            val phone = sessionManager.getCurrentPhone()
+            if (phone != null) {
+                val actionName = when (tab) {
+                    AppTab.HOME -> "Opened Home"
+                    AppTab.VIRTUAL_LAB -> "Opened Virtual Lab"
+                    AppTab.AI_TEACHER -> "Opened AI Teacher"
+                    AppTab.CHANNELS -> "Opened Video Channels"
+                }
+                authRepo.logActivity(phone, actionName)
+            }
+        }
     }
 
     // --- Home Tab State ---
