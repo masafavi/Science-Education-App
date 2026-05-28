@@ -24,15 +24,23 @@ import androidx.compose.ui.unit.dp
 import kotlin.math.sin
 
 // Theme Colors for Apple Liquid Glass + Android 17 design
-val GlassSlateDark = Color(0xFF030712)
-val LiquidIndigo = Color(0xFF1E1B4B)
-val LiquidTeal = Color(0xFF0D9488)
-val LiquidPink = Color(0xFFDB2777)
-val GlassWhiteNormal = Color(0x1FFFFFFF)
-val GlassWhiteBorder = Color(0x3BFFFFFF)
+val AppBackground = Color(0xFF040811)
+val Slate900 = Color(0xFF0F172A)
+val Cyan400 = Color(0xFF22D3EE)
+val Cyan500 = Color(0xFF06B6D4)
+val Blue600 = Color(0xFF2563EB)
+val Indigo500 = Color(0xFF6366F1)
+val GlassWhitebg = Color(0x0CFFFFFF) // white/5
+val GlassWhiteBorder = Color(0x1AFFFFFF) // white/10
+
+val GlassSlateDark = AppBackground
+val LiquidIndigo = Slate900
+val LiquidTeal = Cyan500
+val LiquidPink = Blue600
+val GlassWhiteNormal = GlassWhitebg
 val GlassDarkNormal = Color(0x59000000)
-val NeonCyan = Color(0xFF22D3EE)
-val NeonPurple = Color(0xFFC084FC)
+val NeonCyan = Cyan400
+val NeonPurple = Cyan500
 
 @Composable
 fun GlassyBackground(
@@ -117,47 +125,26 @@ fun GlassyBackground(
 @Composable
 fun GlassyCard(
     modifier: Modifier = Modifier,
-    cornerRadius: Dp = 24.dp,
+    cornerRadius: Dp = 28.dp,
     borderWidth: Dp = 1.dp,
-    elevation: Dp = 10.dp,
+    elevation: Dp = 0.dp,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Card(
         modifier = modifier
-            .shadow(
-                elevation = elevation,
-                shape = RoundedCornerShape(cornerRadius),
-                clip = false,
-                ambientColor = Color.Black.copy(alpha = 0.5f),
-                spotColor = Color.Black.copy(alpha = 0.8f)
-            )
             .border(
                 width = borderWidth,
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        Color.White.copy(alpha = 0.35f),
-                        Color.White.copy(alpha = 0.05f),
-                        Color.Black.copy(alpha = 0.15f)
-                    )
-                ),
+                color = GlassWhiteBorder,
                 shape = RoundedCornerShape(cornerRadius)
             ),
         shape = RoundedCornerShape(cornerRadius),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White.copy(alpha = 0.07f)
+            containerColor = GlassWhitebg
         )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            Color.White.copy(alpha = 0.09f),
-                            Color.White.copy(alpha = 0.03f)
-                        )
-                    )
-                )
                 .padding(20.dp),
             content = content
         )

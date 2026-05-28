@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -113,20 +114,18 @@ fun LiquidFloatingNavBar(
                 .height(68.dp)
                 .fillMaxWidth(0.95f)
                 .shadow(
-                    elevation = 16.dp,
+                    elevation = 0.dp,
                     shape = RoundedCornerShape(32.dp),
                     ambientColor = Color.Black,
                     spotColor = Color.Black
                 )
                 .border(
                     width = 1.dp,
-                    brush = Brush.verticalGradient(
-                        listOf(Color.White.copy(alpha = 0.35f), Color.White.copy(alpha = 0.05f))
-                    ),
+                    color = com.example.ui.components.GlassWhiteBorder,
                     shape = RoundedCornerShape(32.dp)
                 ),
             shape = RoundedCornerShape(32.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xD90F172A)) // Frosted dark Slate
+            colors = CardDefaults.cardColors(containerColor = com.example.ui.components.GlassWhitebg) // Immersive glass pill
         ) {
             Row(
                 modifier = Modifier
@@ -201,10 +200,10 @@ fun RowScope.NavBarItem(
         // Glowing pill indicator matching modern Material 3/Android 17
         Box(
             modifier = Modifier
-                .height(30.dp)
-                .width(52.dp)
-                .clip(RoundedCornerShape(15.dp))
-                .background(if (isActive) LiquidTeal.copy(alpha = 0.3f) else Color.Transparent),
+                .height(32.dp)
+                .width(56.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(if (isActive) com.example.ui.components.LiquidTeal.copy(alpha = 0.2f) else Color.Transparent),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -219,7 +218,8 @@ fun RowScope.NavBarItem(
             text = label,
             fontSize = 10.sp,
             color = if (isActive) activeColor else inactiveColor,
-            modifier = Modifier.padding(top = 2.dp),
+            fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal,
+            modifier = Modifier.padding(top = 4.dp),
             style = MaterialTheme.typography.labelSmall
         )
     }

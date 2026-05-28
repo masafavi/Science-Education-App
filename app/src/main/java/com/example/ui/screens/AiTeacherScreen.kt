@@ -144,8 +144,8 @@ fun AiTeacherScreen(
                                 .clickable {
                                     viewModel.askTeacher(preset)
                                 }
-                                .background(Color.White.copy(alpha = 0.08f))
-                                .border(1.dp, Color.White.copy(alpha = 0.15f), RoundedCornerShape(16.dp))
+                                .background(GlassWhitebg)
+                                .border(1.dp, GlassWhiteBorder, RoundedCornerShape(16.dp))
                                 .padding(horizontal = 14.dp, vertical = 8.dp)
                         ) {
                             Text(
@@ -184,10 +184,10 @@ fun AiTeacherScreen(
                         .clip(RoundedCornerShape(27.dp))
                         .testTag("chat_text_input"),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedContainerColor = Color.White.copy(alpha = 0.09f),
-                        unfocusedContainerColor = Color.White.copy(alpha = 0.05f),
-                        focusedBorderColor = Color.White.copy(alpha = 0.40f),
-                        unfocusedBorderColor = Color.White.copy(alpha = 0.15f),
+                        focusedContainerColor = GlassWhitebg,
+                        unfocusedContainerColor = GlassWhitebg.copy(alpha = 0.03f),
+                        focusedBorderColor = NeonCyan,
+                        unfocusedBorderColor = GlassWhiteBorder,
                         focusedTextColor = Color.White,
                         unfocusedTextColor = Color.White
                     ),

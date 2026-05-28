@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -70,30 +71,43 @@ fun HomeScreen(
                 ) {
                     Column {
                         Text(
-                            text = "کاوش در علوم تجربی",
-                            fontSize = 26.sp,
+                            text = "SCIENCE PLUS",
+                            fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White
+                            color = NeonCyan,
+                            letterSpacing = 2.sp,
+                            modifier = Modifier.padding(bottom = 4.dp)
                         )
-                        Text(
-                            text = "یادگیری فراتر از کتاب با شبیه‌ساز ۳بعدی",
-                            fontSize = 13.sp,
-                            color = Color.White.copy(alpha = 0.7f),
-                            modifier = Modifier.padding(top = 4.dp)
-                        )
+                        Row {
+                            Text(
+                                text = "کاوش در ",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Black,
+                                color = Color.White
+                            )
+                            Text(
+                                text = "علوم",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Black,
+                                color = NeonCyan
+                            )
+                        }
                     }
-                    // Liquid Premium Badge
+                    // Liquid Premium icon
                     Box(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(Color.White.copy(alpha = 0.12f))
-                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                            .size(48.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(GlassWhiteNormal)
+                            .border(1.dp, GlassWhiteBorder, RoundedCornerShape(16.dp))
+                            .clickable { },
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = "نسخه ۱۷",
-                            fontSize = 11.sp,
-                            color = NeonCyan,
-                            fontWeight = FontWeight.Bold
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(CircleShape)
+                                .background(Brush.linearGradient(listOf(NeonCyan, Blue600)))
                         )
                     }
                 }
