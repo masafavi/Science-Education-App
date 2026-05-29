@@ -29,19 +29,25 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.components.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import com.example.viewmodel.AppTab
 import com.example.viewmodel.LessonCategory
 import com.example.viewmodel.LessonTopic
 import com.example.viewmodel.ScienceViewModel
 
+import com.example.viewmodel.AuthViewModel
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: ScienceViewModel,
+    authViewModel: AuthViewModel? = null,
     modifier: Modifier = Modifier
 ) {
     val selectedCategory by viewModel.selectedCategory.collectAsState()
     val selectedLesson by viewModel.selectedLesson.collectAsState()
+    val currentUser by (authViewModel?.currentUser ?: MutableStateFlow(null)).collectAsState()
     
     val lessons = remember(selectedCategory) {
         if (selectedCategory == LessonCategory.ALL) {
@@ -93,22 +99,64 @@ fun HomeScreen(
                             )
                         }
                     }
-                    // Liquid Premium icon
-                    Box(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(GlassWhiteNormal)
-                            .border(1.dp, GlassWhiteBorder, RoundedCornerShape(16.dp))
-                            .clickable { },
-                        contentAlignment = Alignment.Center
-                    ) {
+                    // Gamification Dashboard (Duolingo Style)
+                    if (currentUser != null) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // Streak
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("🔥", fontSize = 16.sp)
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "${currentUser?.streak ?: 0}",
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFFF97316),
+                                    fontSize = 14.sp
+                                )
+                            }
+                            // XP
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("💎", fontSize = 16.sp)
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "${currentUser?.xp ?: 0}",
+                                    fontWeight = FontWeight.Bold,
+                                    color = NeonCyan,
+                                    fontSize = 14.sp
+                                )
+                            }
+                            // Hearts
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("❤️", fontSize = 16.sp)
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "${currentUser?.hearts ?: 5}",
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFFEF4444),
+                                    fontSize = 14.sp
+                                )
+                            }
+                        }
+                    } else {
+                        // Liquid Premium icon
                         Box(
                             modifier = Modifier
-                                .size(32.dp)
-                                .clip(CircleShape)
-                                .background(Brush.linearGradient(listOf(NeonCyan, Blue600)))
-                        )
+                                .size(48.dp)
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(GlassWhiteNormal)
+                                .border(1.dp, GlassWhiteBorder, RoundedCornerShape(16.dp))
+                                .clickable { },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .clip(CircleShape)
+                                    .background(Brush.linearGradient(listOf(NeonCyan, Blue600)))
+                            )
+                        }
                     }
                 }
 

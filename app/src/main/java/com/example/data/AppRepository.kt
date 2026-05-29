@@ -14,6 +14,7 @@ class AppRepository(
     val allLogs: Flow<List<ActivityLog>> = activityLogDao.getAllLogs()
 
     suspend fun getUserByPhone(phone: String): User? = userDao.getUserByPhone(phone)
+    fun getUserFlowByPhone(phone: String): Flow<User?> = userDao.getUserFlowByPhone(phone)
 
     suspend fun insertUser(user: User) = userDao.insertUser(user)
 

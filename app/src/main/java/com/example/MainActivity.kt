@@ -123,7 +123,7 @@ class MainActivity : ComponentActivity() {
                                         label = "tab_crossfade"
                                     ) { tab ->
                                         when (tab) {
-                                            AppTab.HOME -> HomeScreen(viewModel = viewModel)
+                                            AppTab.HOME -> HomeScreen(viewModel = viewModel, authViewModel = authViewModel)
                                             AppTab.VIRTUAL_LAB -> VirtualLabScreen(viewModel = viewModel)
                                             AppTab.AI_TEACHER -> AiTeacherScreen(viewModel = viewModel)
                                             AppTab.CHANNELS -> ChannelsScreen(viewModel = viewModel)

@@ -15,6 +15,9 @@ interface UserDao {
     fun getAllStudents(): Flow<List<User>>
 
     @Query("SELECT * FROM users WHERE phoneNumber = :phoneNumber LIMIT 1")
+    fun getUserFlowByPhone(phoneNumber: String): Flow<User?>
+
+    @Query("SELECT * FROM users WHERE phoneNumber = :phoneNumber LIMIT 1")
     suspend fun getUserByPhone(phoneNumber: String): User?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

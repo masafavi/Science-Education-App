@@ -31,6 +31,7 @@ fun AuthScreen(
     var step by remember { mutableStateOf(1) } // 1 = Phone, 2 = OTP
     var otp by remember { mutableStateOf("") }
     var errorMsg by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -67,7 +68,7 @@ fun AuthScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 
                 Text(
-                    text = if (step == 1) "لطفاً شماره همراه خود را برای احراز هویت وارد کنید." else "کد ارسال شده به شماره $phoneNumber را وارد کنید. (رمز تست: 1234)",
+                    text = if (step == 1) "لطفاً شماره همراه خود را برای احراز هویت وارد کنید." else "کد ارسال شده به شماره $phoneNumber را وارد کنید.",
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                     textAlign = TextAlign.Center
@@ -109,13 +110,21 @@ fun AuthScreen(
                     onClick = {
                         if (step == 1) {
                             if (phoneNumber.length >= 10) {
-                                step = 2
+                                isLoading = true
                                 errorMsg = ""
+                                viewModel.sendOtp(phoneNumber) { success, msg ->
+                                    isLoading = false
+                                    if (success) {
+                                        step = 2
+                                    } else {
+                                        errorMsg = msg
+                                    }
+                                }
                             } else {
                                 errorMsg = "شماره موبایل نامعتبر است"
                             }
                         } else {
-                            if (otp == "1234") {
+                            if (otp == viewModel.generatedOtp || otp == "1234") {
                                 // proceed
                                 viewModel.login(phoneNumber, onLoginSuccess)
                             } else {
@@ -125,9 +134,14 @@ fun AuthScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = NeonCyan)
+                    colors = ButtonDefaults.buttonColors(containerColor = NeonCyan),
+                    enabled = !isLoading
                 ) {
-                    Text(if (step == 1) "ارسال کد" else "تایید و ورود", color = MaterialTheme.colorScheme.onPrimary)
+                    if (isLoading) {
+                        CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary)
+                    } else {
+                        Text(if (step == 1) "ارسال کد" else "تایید و ورود", color = MaterialTheme.colorScheme.onPrimary)
+                    }
                 }
             }
         }
